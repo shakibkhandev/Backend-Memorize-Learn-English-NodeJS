@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:latest
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - data:/var/lib/postgresql/data
+    networks:
+      - memorize
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: on-failure
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - memorize
+    volumes:
+      - mailhog:/data
+    
+
+
+
+volumes:
+  data:
+    driver: bridge
+
+networks:
+  memorize:
+    driver: bridge
