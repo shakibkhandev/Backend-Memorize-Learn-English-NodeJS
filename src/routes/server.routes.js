@@ -1,12 +1,12 @@
-const express = require("express");
-const {
+import express from "express";
+import {
   serverRunning,
   healthCheck,
-} = require("../controllers/server.controllers");
+} from "../controllers/server.controllers.js";
 
 const serverRoutes = express.Router();
 
 serverRoutes.get("/", serverRunning);
 serverRoutes.get("/health", healthCheck);
 
-module.exports = serverRoutes;
+export default serverRoutes;

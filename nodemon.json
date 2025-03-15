@@ -1,4 +1,4 @@
 {
-    "ext": ".js, .mjs, .html, .css, .coffee, .litcoffee, .json, .yaml",
+    "ext": ".js, .mjs, .html, .css, .coffee, .litcoffee, .json, .yml",
     "ignore": ["seed-credentials.json"]
 }

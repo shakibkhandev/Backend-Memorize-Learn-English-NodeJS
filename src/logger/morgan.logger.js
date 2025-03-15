@@ -1,5 +1,5 @@
-const morgan = require("morgan");
-const logger = require("./winston.logger");
+import morgan from "morgan";
+import logger from "./winston.logger.js";
 
 const stream = {
   // Use the http severity
@@ -16,4 +16,4 @@ const morganMiddleware = morgan(
   { stream, skip }
 );
 
-module.exports = morganMiddleware;
+export default morganMiddleware;

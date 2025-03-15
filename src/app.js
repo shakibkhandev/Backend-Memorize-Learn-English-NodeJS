@@ -1,26 +1,28 @@
-require("dotenv/config");
-const express = require("express");
-const routes = require("./routes");
-const { rateLimit } = require("express-rate-limit");
-const morganMiddleware = require("./logger/morgan.logger");
-const cors = require("cors");
-const { fileURLToPath } = require("url");
-const fs = require("fs");
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const YAML = require("yaml");
-const requestIp = require("request-ip");
-const swaggerUi = require("swagger-ui-express");
+import "dotenv/config";
+import express from "express";
+import routes from "./routes/index.js";
+import { rateLimit } from "express-rate-limit";
+import morganMiddleware from "./logger/morgan.logger.js";
+import cors from "cors";
+import { fileURLToPath } from "url";
+import fs from "fs";
+import path from "path";
+import cookieParser from "cookie-parser";
+import YAML from "yaml";
+import requestIp from "request-ip";
+import swaggerUi from "swagger-ui-express";
 
 
 
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const file = fs.readFileSync(path.resolve(__dirname, "./swagger.yml"), "utf8");
 
 const swaggerDocument = YAML.parse(
   file?.replace(
     "- url: ${{server}}",
-    `- url: ${process.env.FRONTEND_HOST_URL || "http://localhost:8080"}/api/v1`
+    `- url: ${process.env.BACKEND_HOST_URL || `http://localhost:${process.env.PORT}`}/api/v1`
   )
 );
 
@@ -93,4 +95,4 @@ app.use(
 
 
 
-module.exports = app;
+export default app;
