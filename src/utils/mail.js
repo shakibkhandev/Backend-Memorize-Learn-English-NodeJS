@@ -30,12 +30,11 @@ export const sendEmail = async (options) => {
   if (process.env.NODE_ENV === "production") {
     // Create a Nodemailer transporter instance for production (Mailtrap)
     transporter = nodemailer.createTransport({
-      host: process.env.MAILHOG_SMTP_HOST,
-      port: process.env.MAILHOG_SMTP_HOST,
-      //   auth: {
-      //     user: process.env.MAILTRAP_SMTP_USER,
-      //     pass: process.env.MAILTRAP_SMTP_PASS,
-      //   },
+      service: "gmail",
+      auth: {
+        user: process.env.BASE_EMAIL,
+        pass: process.env.BASE_EMAIL_PASSWORD,
+      },
     });
   } else {
     // Use Mailhog for non-production environments

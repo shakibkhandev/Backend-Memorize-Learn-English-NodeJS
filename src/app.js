@@ -1,19 +1,20 @@
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import "dotenv/config";
 import express from "express";
-import routes from "./routes/index.js";
 import { rateLimit } from "express-rate-limit";
-import morganMiddleware from "./logger/morgan.logger.js";
-import cors from "cors";
-import { fileURLToPath } from "url";
 import fs from "fs";
 import path from "path";
-import cookieParser from "cookie-parser";
-import YAML from "yaml";
 import requestIp from "request-ip";
 import swaggerUi from "swagger-ui-express";
-
-
-
+import { fileURLToPath } from "url";
+import YAML from "yaml";
+import morganMiddleware from "./logger/morgan.logger.js";
+import { errorHandler } from "./middlewares/error.middlewares.js";
+import routes from "./routes/index.js";
+import { databaseCleared } from "./seeds/clear.db.js";
+import { createLessonSeed } from "./seeds/lesson.create.js";
+import { createMCQSeed } from "./seeds/mcqs.create.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,9 +26,6 @@ const swaggerDocument = YAML.parse(
     `- url: ${process.env.BACKEND_HOST_URL || `http://localhost:${process.env.PORT}`}/api/v1`
   )
 );
-
-
-
 
 const app = express();
 app.use(
@@ -78,21 +76,26 @@ app.use(morganMiddleware);
 
 app.use("/api/v1", routes);
 
-
 // * API DOCS
 // ? Keeping swagger code at the end so that we can load swagger on "/" route
 app.use(
-    "/docs",
-    swaggerUi.serve,
-    swaggerUi.setup(swaggerDocument, {
-      swaggerOptions: {
-        docExpansion: "none", // keep all the sections collapsed by default
-      },
-      customSiteTitle: "Memorize Learn English APi Docs",
-    })
-  );
-  
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, {
+    swaggerOptions: {
+      docExpansion: "none", // keep all the sections collapsed by default
+    },
+    customSiteTitle: "Memorize Learn English APi Docs",
+  })
+);
+
+// Seed
+
+app.post("/seeds/create-lesson", createLessonSeed);
+app.delete("/seeds/delete-all-data", databaseCleared);
+app.post("/seeds/create-mcqs", createMCQSeed);
 
 
+app.use(errorHandler);
 
 export default app;
